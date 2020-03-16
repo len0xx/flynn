@@ -6,7 +6,7 @@
 
 if (!isset($_REQUEST)) return;
 
-// Including data file
+// Including data file 
 require_once "data.php";
 
 // Receiving and decoding the notification
