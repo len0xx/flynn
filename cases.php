@@ -1,7 +1,7 @@
 <?php
 
 //
-// F L Y N N — v0.45
+// F L Y N N — v0.5
 //
 // "Cases" file 
 // this file searches for certain phrases in users' message and decides what reply to send him
@@ -33,6 +33,14 @@ elseif (has("and", ["что", "кротовая", "нора"])) send(ifile("worm
 elseif (has("and", ["что", "галактика"])) send(ifile("galaxy"), "");
 elseif (has("and", ["какая", "звезда", "ближайшая"])) send(ifile("nearest_star"), "");
 elseif (has("and", ["что", "спутник"])) send(ifile("satellite"), "");
+elseif (has("and", ["искусственные", "спутники", "земли"])) send(ifile("artificial_satellites"), "");
+elseif (has("and", ["спутники", "сатурна"])) send(ifile("saturn_satellites"), "");
+elseif (has("and", ["спутники", "юпитера"])) send(ifile("jupiter_satellites"), "");
+elseif (has("and", ["спутники", "меркурия"])) send(ifile("mercury_satellites"), "");
+elseif (has("and", ["спутники", "марса"])) send(ifile("mars_satellites"), "");
+elseif (has("and", ["спутники", "венеры"])) send(ifile("venus_satellites"), "");
+elseif (has("and", ["спутники", "нептуна"])) send(ifile("neptune_satellites"), "");
+elseif (has("and", ["спутники", "урана"])) send(ifile("uranus_satellites"), "");
 elseif (has("and", ["что", "млечный", "путь"]) || has("and", ["расскажи", "про", "млечный", "путь"])) send(ifile("milky_way"), "photo-188445631_457239026");
 elseif (has("and", ["что", "черная", "дыра"]) || has("and", ["расскажи", "про", "черную", "дыру"])) send(ifile("blackholes"), "photo-188445631_457239037");
 elseif (has("and", ["что", "нейтронная", "звезда"]) || has("and", ["расскажи", "про", "нейтронную", "звезду"])) send(ifile("neutron_stars"), "photo-188445631_457239038");

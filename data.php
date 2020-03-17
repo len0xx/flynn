@@ -1,7 +1,7 @@
 <?php
 
 //
-// F L Y N N — v0.45
+// F L Y N N — v0.5
 //
 // "Data" file 
 // this file contains all the data which is used for connecting with server and sending messages
@@ -15,4 +15,6 @@ define("FLN_VKAPI_VERSION", '5.103');
 // Генерируем случайное шестизначное число (Обязательный параметр с версии 5.90)
 define("FLN_RANDOM_NUMBER", rand(100000, 999999));
 
+define("CALLBACK_API_EVENT_CONFIRMATION", "confirmation");
+define("CALLBACK_API_EVENT_NEW_MESSAGE", "message_new");
 ?>

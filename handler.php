@@ -1,7 +1,7 @@
 <?php
 
 //
-// VKAPI
+// VKAPI — Handler
 //
 
 if (!isset($_REQUEST)) return;
@@ -22,6 +22,7 @@ function _callback_response($data) {
     exit();
 }
 
+// Three functions for writing log files
 function _log_write($message) {
     $trace = debug_backtrace();
     $function_name = isset($trace[2]) ? $trace[2]['function'] : '-';
@@ -43,10 +44,7 @@ function log_error($message) {
 }
 
 // Checking the secretKey
-if(strcmp($data->secret, FLN_SECRET_KEY) !== 0 && strcmp($data->type, 'confirmation') !== 0) {
-    echo("ok");
-    return;
-}
+if(strcmp($data->secret, FLN_SECRET_KEY) !== 0 && strcmp($data->type, 'confirmation') !== 0) _callback_response("ok");
 
 $event = _callback_getEvent();
 // Checking what's inside the "type" field
