@@ -1,7 +1,7 @@
 <?php
 
 //
-// F L Y N N — v0.52
+// F L Y N N — v0.53
 //
 // "Cases" file 
 // this file searches for certain phrases in users' message and decides what reply to send him

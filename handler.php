@@ -9,39 +9,11 @@ if (!isset($_REQUEST)) return;
 // Including data file 
 require_once "data.php";
 
+require_once "config.php";
+
 // Receiving and decoding the notification
 $event = _callback_getEvent();
 $msg = $event['object']['message']['text'];
-
-function _callback_getEvent() {
-    return json_decode(file_get_contents('php://input'), true);
-}
-
-function _callback_response($data) {
-    echo $data;
-    exit();
-}
-
-// Three functions for writing log files
-function _log_write($message) {
-    $trace = debug_backtrace();
-    $function_name = isset($trace[2]) ? $trace[2]['function'] : '-';
-    $mark = date("H:i:s") . ' [' . $function_name . ']';
-    $log_name = '/log_' . date("j.n.Y") . '.txt';
-    file_put_contents($log_name, $mark . " : " . $message . "\n", FILE_APPEND);
-}
-
-function log_msg($message) {
-    if (is_array($message)) $message = json_encode($message);
-    
-    _log_write('[INFO] ' . $message);
-}
-
-function log_error($message) {
-    if (is_array($message)) $message = json_encode($message);
-    
-    _log_write('[ERROR] ' . $message);
-}
 
 // Checking the secretKey
 if(strcmp($event['secret'], FLN_SECRET_KEY) !== 0 && strcmp($event['type'], 'confirmation') !== 0) _callback_response("ok");
@@ -78,7 +50,8 @@ try {
         break;
 
         case CALLBACK_API_EVENT_REPLY:
-            _callback_response("Reply sent");
+            // If we recieve a notification about a reply being sent, return "ok" to the Callback API server
+            _callback_response("ok");
         break;
         default:
             _callback_response("Unsupported event");
