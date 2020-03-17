@@ -1,10 +1,10 @@
 <?php
 
 //
-// F L Y N N — v0.5
+// F L Y N N — v0.51
 //
 // "Data" file 
-// this file contains all the data which is used for connecting with server and sending messages
+// this file contains all the data used for connecting with server and sending messages
 //
 
 //Коды, секретные слова и прочая документация

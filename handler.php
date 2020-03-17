@@ -10,8 +10,8 @@ if (!isset($_REQUEST)) return;
 require_once "data.php";
 
 // Receiving and decoding the notification
-$data = json_decode(file_get_contents('php://input'));
-$msg = $data->object->message->text;
+$event = _callback_getEvent();
+$msg = $event->object->message->text;
 
 function _callback_getEvent() {
     return json_decode(file_get_contents('php://input'), true);
@@ -44,9 +44,8 @@ function log_error($message) {
 }
 
 // Checking the secretKey
-if(strcmp($data->secret, FLN_SECRET_KEY) !== 0 && strcmp($data->type, 'confirmation') !== 0) _callback_response("ok");
+if(strcmp($event['secret'], FLN_SECRET_KEY) !== 0 && strcmp($event['type'], 'confirmation') !== 0) _callback_response("ok");
 
-$event = _callback_getEvent();
 // Checking what's inside the "type" field
 try {
     switch ($event['type']) {
@@ -59,7 +58,7 @@ try {
         //Если это уведомление о новом сообщении...
         case CALLBACK_API_EVENT_NEW_MESSAGE:
             //...получаем id его автора]
-            define("FLN_USER_ID", $data->object->message->from_id);
+            define("FLN_USER_ID", $event->object->message->from_id);
             //затем с помощью users.get получаем данные об авторе
             $userInfo = json_decode(file_get_contents("https://api.vk.com/method/users.get?access_token=".FLN_ACCESS_TOKEN."&user_ids=".FLN_USER_ID."&v=".FLN_VKAPI_VERSION));
     
