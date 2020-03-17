@@ -1,7 +1,7 @@
 <?php
 
 //
-// F L Y N N — v0.51
+// F L Y N N — v0.52
 //
 // "Data" file 
 // this file contains all the data used for connecting with server and sending messages
@@ -17,4 +17,5 @@ define("FLN_RANDOM_NUMBER", rand(100000, 999999));
 
 define("CALLBACK_API_EVENT_CONFIRMATION", "confirmation");
 define("CALLBACK_API_EVENT_NEW_MESSAGE", "message_new");
+define("CALLBACK_API_EVENT_REPLY", "message_reply");
 ?>
