@@ -1,7 +1,7 @@
 <?php
 
 //
-// F L Y N N — v0.53
+// F L Y N N — v0.54
 //
 // "Cases" file 
 // this file searches for certain phrases in users' message and decides what reply to send him
@@ -64,10 +64,16 @@ elseif (has("and", ["что", "белый", "карлик"]) || has("and", ["р�
 elseif (has("and", ["что", "двойная", "звезда"]) || has("and", ["расскажи", "про", "двойную", "звезду"])) send(ifile("binary_star"), "");
 elseif (has("and", ["какие", "книги", "про", "космос"])) send(ifile("books"), "");
 elseif (has("and", ["когда", "день", "космонавтики"]) || has("and", ["расскажи", "про", "день", "космонавтики"])) send(ifile("cosmo_day"), "");
+elseif (has("and", ["что", "скорость", "света"]) || has("and", ["чему", "равна", "скорость", "света"])) send(ifile("light_speed"), "");
 elseif (has("and", ["что", "световой", "год"])) send(ifile("light_year"), "");
+elseif (has("and", ["что", "световой", "день"])) send(ifile("light_day"), "");
 elseif (has("and", ["что", "ты", "можешь"]) || has("and", ["что", "ты", "умеешь"]) || has("and", ["список", "вопросов"])) send(ifile("list"), "");
 elseif (has("and", ["спасибо"])) send("Не за что, обращайся ещё!", "");
 elseif (has("or", $forbidden)) send(getr($forbs), ""); // Forbidden words
+elseif (has("and", ["сколько", "в", "световых", "годах"]) && count($message) > 5 && count($message) < 7) send(calc("light_years"), "");
+elseif (has("and", ["сколько", "в", "световых", "днях"]) && count($message) > 5 && count($message) < 7) send(calc("light_days"), "");
+elseif (has("and", ["сколько", "в", "астрономических", "единицах"]) && count($message) > 5 && count($message) < 7) send(calc("au"), "");
+elseif (has("and", ["сколько", "в", "парсеках"]) && count($message) > 4 && count($message) < 6) send(calc("parsec"), "");
 else send(getr($defaults), "");
 
 ?>

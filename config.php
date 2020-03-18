@@ -1,7 +1,7 @@
 <?php
 
 //
-// F L Y N N — v0.53
+// F L Y N N — v0.54
 //
 // "Config" file 
 // this file contains all the functions used for handling the notification

@@ -13,7 +13,7 @@ require_once "config.php";
 
 // Receiving and decoding the notification
 $event = _callback_getEvent();
-$msg = $event['object']['message']['text'];
+define("FLN_RECIEVED_MESSAGE", $event['object']['message']['text']);
 
 // Checking the secretKey
 if(strcmp($event['secret'], FLN_SECRET_KEY) !== 0 && strcmp($event['type'], 'confirmation') !== 0) _callback_response("ok");
