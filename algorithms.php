@@ -47,10 +47,17 @@ function ifile($name) {
     return file_get_contents("http://lnx.pw/vk/info/{$name}.txt");
 }
 
+function _round($num) {
+    if ($num < 0.01) return round($num, 6);
+    else return round($num, 2);
+}
+
 function calc($metric_out) {
     global $message, $message_aii;
-    $numb =  floatval($message_aii[array_search("в", $message) + 1]);
+    $numb = floatval($message_aii[array_search("в", $message) + 1]);
     $calculation = 0;
+    $err_calc = false;
+    if ($numb * 1 == 0) $err_calc = true;
     $met_in = "undefined";
     $met_out = "undefined";
     $status_ok = true;
@@ -66,29 +73,32 @@ function calc($metric_out) {
     } elseif (array_search("световых", $message) && array_search("лет", $message)) {
         $met_in = "световых лет";
         $metric_in_volume = 1 / 9460730472580.8;
-    } elseif (array_search("парсек", $message)) {
+    } elseif (array_search("парсек", $message) || array_search("парсеков", $message)) {
         $met_in = "парсек";
         $metric_in_volume = 1 / 9460730472580.8 / 3.26;
     } elseif (array_search("астрономических", $message) && array_search("единиц", $message)) {
         $met_in = "астрономических единиц";
         $metric_in_volume = 1 / 149597870.7;
-    }
-    if ($status_ok) {
-        if ($metric_out == "light_years") {
-            $calculation = round($numb * $metric_in_volume * 9460730472580.8, 2);
-            $met_out = "световых годах";
-        } elseif ($metric_out == "au") {
-            $calculation = round($numb * $metric_in_volume * 9460730472580.8 / 63241.1, 2);
-            $met_out = "астрономических единицах";
-        } elseif ($metric_out == "parsec") {
-            $calculation = round($numb * $metric_in_volume * 9460730472580.8 * 3.26, 2);
-            $met_out = "парсеках";
-        } elseif ($metric_out == "light_days") {
-            $calculation = round($numb * $metric_in_volume * 9460730472580.8 / 365, 2);
-            $met_out = "световых днях";
+    } else $status_ok = false;
+    if ($status_ok && !$err_calc) {
+        if ($metric_out == "light_years" || $metric_out == "light_years1") {
+            $calculation = _round($numb * $metric_in_volume * 9460730472580.8);
+            $met_out = ($metric_out == "light_years" ? "световых годах" : "световом году");
+        } elseif ($metric_out == "au" || $metric_out == "au1") {
+            $calculation = _round($numb * $metric_in_volume * 9460730472580.8 / 63241.1);
+            $met_out = ($metric_out == "au" ? "астрономических единицах" : "астрономической единице");
+        } elseif ($metric_out == "parsec" || $metric_out == "parsec1") {
+            $calculation = _round($numb * $metric_in_volume * 9460730472580.8 * 3.26);
+            $met_out = ($metric_out == "parsec" ? "парсеках" : "парсеке");
+        } elseif ($metric_out == "light_days" || $metric_out == "light_days") {
+            $calculation = _round($numb * $metric_in_volume * 9460730472580.8 / 365);
+            $met_out = ($metric_out == "light_days" ? "световых днях" : "световом дне");
         }
         return "В " . implode(" ", [$numb, $met_out, $calculation, $met_in]);
-    } else return "Ошибка";
+    } else {
+        if ($err_calc) return "Указано неверное число.\n\nВведите корректное число, отличное от 0";
+        elseif (!$status_ok) return "Указана неподдерживаемая единица измерения.\n\nСписок поддерживаемых: парсеки, световые годы, астрономические единицы";
+    }
 }
 
 //Функция для отправки сообщения
