@@ -1,26 +1,11 @@
 <?php
 
 //
-// F L Y N N — v0.54
+// F L Y N N — v0.56
 //
 // "Algorithms" file
 // this file contains all the algorithms the program works with
 //
-
-// β—function
-function deform($ar) {
-    if (count($ar)) {
-        $new_ar = array();
-        foreach ($ar as $el) {
-            if (strlen($el) > 4) {
-                $spl = str_split($el);
-                $new_w = '';
-                for ($i = 0; $i < count($spl) - 1; $i++) $new_w .= $spl[$i];
-                array_push($new_ar, $new_w);
-            } else array_push($new_ar, $el);
-        } return $new_ar;
-    }
-}
 
 //Преобразуем текстовое сообщение в массив
 //В процессе преобразования переводим все слова в нижний регистр, удаляем лишние символы, лишние пробелы
@@ -31,11 +16,6 @@ $restricted = str_split(",./';:\"\\<>[]{}!@#$%^&*()_+№-=~`|?");
 $new_msg = '';
 foreach ($msg_stripped as $char) if (!in_array($char, $restricted)) $new_msg .= $char;
 $message = explode(" ", $new_msg);
-if (count($message)) {
-    global $message;
-    $new_msg2 = array();
-    foreach($message as $key => $value) if ($value != '') array_push($new_msg2, $value);
-} $message = $new_msg2;
 
 //Функция для проверки на наличие или отсутствие конкретного слова в сообщении
 function has($key, $words) {
@@ -83,19 +63,28 @@ function calc($metric_out) {
     } elseif (array_search("километров", $message)) {
         $met_in = "километров";
         $metric_in_volume = 1;
+    } elseif (array_search("световых", $message) && array_search("лет", $message)) {
+        $met_in = "световых лет";
+        $metric_in_volume = 1 / 9460730472580.8;
+    } elseif (array_search("парсек", $message)) {
+        $met_in = "парсек";
+        $metric_in_volume = 1 / 9460730472580.8 / 3.26;
+    } elseif (array_search("астрономических", $message) && array_search("единиц", $message)) {
+        $met_in = "астрономических единиц";
+        $metric_in_volume = 1 / 149597870.7;
     }
     if ($status_ok) {
         if ($metric_out == "light_years") {
-            $calculation = $numb * 9460730472580.8 * $metric_in_volume;
+            $calculation = round($numb * $metric_in_volume * 9460730472580.8, 2);
             $met_out = "световых годах";
         } elseif ($metric_out == "au") {
-            $calculation = $numb * 149597870.7 * $metric_in_volume;
+            $calculation = round($numb * $metric_in_volume * 9460730472580.8 / 63241.1, 2);
             $met_out = "астрономических единицах";
         } elseif ($metric_out == "parsec") {
-            $calculation = $numb * 9460730472580.8 * 3.26 * $metric_in_volume;
+            $calculation = round($numb * $metric_in_volume * 9460730472580.8 * 3.26, 2);
             $met_out = "парсеках";
         } elseif ($metric_out == "light_days") {
-            $calculation = $numb * 9460730472580.8 / 365 * $metric_in_volume;
+            $calculation = round($numb * $metric_in_volume * 9460730472580.8 / 365, 2);
             $met_out = "световых днях";
         }
         return "В " . implode(" ", [$numb, $met_out, $calculation, $met_in]);

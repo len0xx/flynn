@@ -1,7 +1,7 @@
 <?php
 
 //
-// F L Y N N — v0.54
+// F L Y N N — v0.56
 //
 // "Cases" file 
 // this file searches for certain phrases in users' message and decides what reply to send him
@@ -29,6 +29,8 @@ elseif (has("and", ["что", "звезда"]) && has("not", ["нейтронн�
 elseif (has("and", ["что", "планета"])) send(ifile("planet"), "");
 elseif (has("and", ["что", "экзопланета"])) send(ifile("exoplanet"), "");
 elseif (has("and", ["что", "квазар"])) send(ifile("quasar"), "");
+elseif (has("and", ["что", "пульсар"])) send(ifile("pulsar"), "");
+elseif (has("and", ["что", "космос"]) || has("and", ["расскажи", "про", "космос"])) send(ifile("cosmos"), "");
 elseif (has("and", ["что", "кротовая", "нора"])) send(ifile("wormholes"), "");
 elseif (has("and", ["что", "галактика"])) send(ifile("galaxy"), "");
 elseif (has("and", ["какая", "звезда", "ближайшая"])) send(ifile("nearest_star"), "");
@@ -70,10 +72,10 @@ elseif (has("and", ["что", "световой", "день"])) send(ifile("ligh
 elseif (has("and", ["что", "ты", "можешь"]) || has("and", ["что", "ты", "умеешь"]) || has("and", ["список", "вопросов"])) send(ifile("list"), "");
 elseif (has("and", ["спасибо"])) send("Не за что, обращайся ещё!", "");
 elseif (has("or", $forbidden)) send(getr($forbs), ""); // Forbidden words
-elseif (has("and", ["сколько", "в", "световых", "годах"]) && count($message) > 5 && count($message) < 7) send(calc("light_years"), "");
-elseif (has("and", ["сколько", "в", "световых", "днях"]) && count($message) > 5 && count($message) < 7) send(calc("light_days"), "");
-elseif (has("and", ["сколько", "в", "астрономических", "единицах"]) && count($message) > 5 && count($message) < 7) send(calc("au"), "");
-elseif (has("and", ["сколько", "в", "парсеках"]) && count($message) > 4 && count($message) < 6) send(calc("parsec"), "");
+elseif (has("and", ["сколько", "в", "световых", "годах"]) && count($message) > 5 && count($message) < 8) send(calc("light_years"), "");
+elseif (has("and", ["сколько", "в", "световых", "днях"]) && count($message) > 5 && count($message) < 8) send(calc("light_days"), "");
+elseif (has("and", ["сколько", "в", "астрономических", "единицах"]) && count($message) > 5 && count($message) < 9) send(calc("au"), "");
+elseif (has("and", ["сколько", "в", "парсеках"]) && count($message) > 4 && count($message) < 7) send(calc("parsec"), "");
 else send(getr($defaults), "");
 
 ?>
