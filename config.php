@@ -1,19 +1,21 @@
 <?php
 
 //
-// F L Y N N — v0.56
+// F L Y N N — v0.57
 //
 // "Config" file 
 // this file contains all the functions used for handling the notification
 //
 
+
+// Function returns the "event" element decoded from JSON
 function _callback_getEvent() {
     return json_decode(file_get_contents('php://input'), true);
 }
 
+// Function for exiting the script with $data message
 function _callback_response($data) {
-    echo $data;
-    exit();
+    exit($data);
 }
 
 // Three functions for writing log files

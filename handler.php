@@ -1,9 +1,8 @@
 <?php
 
 //
-// F L Y N N — Requests handler v0.56
+// F L Y N N — Requests handler v0.57
 //
-
 if (!isset($_REQUEST)) return;
 
 // Including data & config files
@@ -14,7 +13,7 @@ require_once "config.php";
 $event = _callback_getEvent();
 define("FLN_RECIEVED_MESSAGE", $event['object']['message']['text']);
 // Checking the secretKey
-if(strcmp($event['secret'], FLN_SECRET_KEY) !== 0 && strcmp($event['type'], 'confirmation') !== 0) _callback_response("ok");
+if(strcmp($event['secret'], FLN_SECRET_KEY) !== 0 && strcmp($event['type'], CALLBACK_API_EVENT_CONFIRMATION) !== 0) _callback_response("ok");
     
 try {
     switch ($event['type']) {
@@ -49,7 +48,7 @@ try {
         break;
         
         default:
-            _callback_response("Unsupported event");
+            _callback_response("Unsupported event: \"".$event['type']."\"");
         break;
     }
 } catch (Exception $e) {
