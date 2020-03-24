@@ -1,7 +1,7 @@
 <?php
 
 //
-// F L Y N N — v0.57
+// F L Y N N — v0.58
 //
 // "Data" file 
 // this file contains all the data used for connecting with server and sending messages
@@ -11,6 +11,9 @@
 define("CALLBACK_API_EVENT_CONFIRMATION", "confirmation");
 define("CALLBACK_API_EVENT_NEW_MESSAGE", "message_new");
 define("CALLBACK_API_EVENT_REPLY", "message_reply");
+define("CALLBACK_API_EVENT_USER_JOINED", "group_join");
+define("CALLBACK_API_EVENT_USER_LEFT", "group_leave");
+define("CALLBACK_API_EVENT_NEW_WALL_POST", "wall_post_new");
 
 // FLYNN Tokens
 define("FLN_CONFIRMATION_TOKEN", '8c6e3d3a');

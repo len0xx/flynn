@@ -1,7 +1,7 @@
 <?php
 
 //
-// F L Y N N — v0.57
+// F L Y N N — v0.58
 //
 // "Algorithms" file
 // this file contains all the algorithms the program works with
@@ -11,7 +11,10 @@
 // .. and gets rid of all the extra symbols
                                                                                                                                                                                         $forbidden = ['блять', 'сука', 'хуй', 'пизда', 'ебать', 'пиздец', 'охуеть', 'бля', 'блядь', 'ебаный', 'суки'];
 function convert($str) {
-    $msg_stripped = str_split(mb_strtolower($str));
+    global $event;
+    if (FLN_MESSAGE_ATTACHMENT_TYPE == 'fwd_messages' && FLN_MESSAGE_EMPTY) $str_up = $event['object']['message']['fwd_messages'][0]['text'];
+    else $str_up = $str;
+    $msg_stripped = str_split(mb_strtolower($str_up));
     $restricted = str_split(",./';:\"\\<>[]{}!@#$%^&*()_+№-=~`|?");
     $new_msg = '';
     foreach ($msg_stripped as $char) if (!in_array($char, $restricted)) $new_msg .= $char;
@@ -34,8 +37,8 @@ function has($key, $words) {
         $trigger = false;
         if (in_array($words, $message) && count($message) == 1) $trigger = true;
     } elseif ($key == 'not') {
-        $trigger = false;
-        foreach ($words as $word) if (!in_array($word, $message)) $trigger = true;
+        $trigger = true;
+        foreach ($words as $word) if (in_array($word, $message)) $trigger = false;
     } return $trigger;
 }
 
@@ -56,8 +59,9 @@ function _round($num) {
 
 // A function that converts different values
 function calc($metric_out) {
-    global $message;
-    $message_aii = explode(" ", mb_strtolower(FLN_RECIEVED_MESSAGE));
+    global $message, $event;
+    if (FLN_MESSAGE_ATTACHMENT_TYPE == 'fwd_messages' && FLN_MESSAGE_EMPTY) $message_aii = explode(" ", mb_strtolower($event['object']['message']['fwd_messages'][0]['text']));
+    else $message_aii = explode(" ", mb_strtolower(FLN_RECIEVED_MESSAGE));
     $numb = floatval($message_aii[array_search("в", $message) + 1]);
     $calculation = 0;
     $err_calc = false;
@@ -116,9 +120,6 @@ function send($app, $reply, $attach) {
             'random_id' => FLN_RANDOM_NUMBER,
             'attachment' => $attach
         );
-        $get_params = http_build_query($request_params);
-        sleep(1);
-        file_get_contents('https://api.vk.com/method/messages.send?' . $get_params);
     } elseif ($app == TRN_APPNAME) {
         $request_params = array(
             'message' => $reply,
@@ -128,10 +129,9 @@ function send($app, $reply, $attach) {
             'random_id' => TRN_RANDOM_NUMBER,
             'attachment' => $attach
         );
-        $get_params = http_build_query($request_params);
-        sleep(1);
-        file_get_contents('https://api.vk.com/method/messages.send?' . $get_params);
-    }
+    } $get_params = http_build_query($request_params);
+    sleep(1);
+    file_get_contents('https://api.vk.com/method/messages.send?' . $get_params);
 }
 
 ?>
