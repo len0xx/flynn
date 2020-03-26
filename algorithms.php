@@ -1,7 +1,7 @@
 <?php
 
 //
-// F L Y N N — v0.58
+// F L Y N N — v0.59
 //
 // "Algorithms" file
 // this file contains all the algorithms the program works with
@@ -14,10 +14,8 @@ function convert($str) {
     global $event;
     if (FLN_MESSAGE_ATTACHMENT_TYPE == 'fwd_messages' && FLN_MESSAGE_EMPTY) $str_up = $event['object']['message']['fwd_messages'][0]['text'];
     else $str_up = $str;
-    $msg_stripped = str_split(mb_strtolower($str_up));
-    $restricted = str_split(",./';:\"\\<>[]{}!@#$%^&*()_+№-=~`|?");
     $new_msg = '';
-    foreach ($msg_stripped as $char) if (!in_array($char, $restricted)) $new_msg .= $char;
+    foreach (str_split(mb_strtolower($str_up)) as $char) if (!in_array($char, str_split(",./';:\"\\<>[]{}!@#$%^&*()_+№-=~`|?"))) $new_msg .= $char;
     return explode(" ", $new_msg);
 } if (FLN_CONVERSION_REQUIRED) $message = convert(FLN_RECIEVED_MESSAGE);
 
@@ -111,27 +109,41 @@ function calc($metric_out) {
 
 // A function for sending the reply
 function send($app, $reply, $attach) {
+    $userID = FLN_USER_ID;
+    if (!in_array($userID, WHITELIST)) $msg_reply = "Ваш ID не допущен к приложению. Попробуйте позже или свяжитесь с администратором";
+    else $msg_reply = $reply;
     if ($app == FLN_APPNAME) {
+        $access_token = FLN_ACCESS_TOKEN;
+        $ver = FLN_VKAPI_VERSION;
+        $randomID = FLN_RANDOM_NUMBER;
+    } else {
+        $access_token = TRN_ACCESS_TOKEN;
+        $ver = TRN_VKAPI_VERSION;
+        $randomID = TRN_RANDOM_NUMBER;
+    }
+    if ($reply == "noreply") {
         $request_params = array(
-            'message' => $reply,
-            'user_id' => FLN_USER_ID,
-            'access_token' => FLN_ACCESS_TOKEN,
-            'v' => FLN_VKAPI_VERSION,
-            'random_id' => FLN_RANDOM_NUMBER,
+            'start_message_id' => FLN_MSG_ID,
+            'peer_id' => $userID,
+            'access_token' => $access_token,
+            'v' => $ver,
+            'group_id' => FLN_GROUP_ID
+        );
+        $get_params = http_build_query($request_params);
+        file_get_contents('https://api.vk.com/method/messages.markAsRead?' . $get_params);
+    } else {
+        $request_params = array(
+            'message' => $msg_reply,
+            'user_id' => $userID,
+            'access_token' => $access_token,
+            'v' => $ver,
+            'random_id' => $randomID,
             'attachment' => $attach
         );
-    } elseif ($app == TRN_APPNAME) {
-        $request_params = array(
-            'message' => $reply,
-            'user_id' => FLN_USER_ID,
-            'access_token' => TRN_ACCESS_TOKEN,
-            'v' => TRN_VKAPI_VERSION,
-            'random_id' => TRN_RANDOM_NUMBER,
-            'attachment' => $attach
-        );
-    } $get_params = http_build_query($request_params);
-    sleep(1);
-    file_get_contents('https://api.vk.com/method/messages.send?' . $get_params);
+        $get_params = http_build_query($request_params);
+        sleep(1);
+        file_get_contents('https://api.vk.com/method/messages.send?' . $get_params);
+    }
 }
 
 ?>

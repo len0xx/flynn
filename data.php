@@ -1,7 +1,7 @@
 <?php
 
 //
-// F L Y N N — v0.58
+// F L Y N N — v0.59
 //
 // "Data" file 
 // this file contains all the data used for connecting with server and sending messages
@@ -15,7 +15,11 @@ define("CALLBACK_API_EVENT_USER_JOINED", "group_join");
 define("CALLBACK_API_EVENT_USER_LEFT", "group_leave");
 define("CALLBACK_API_EVENT_NEW_WALL_POST", "wall_post_new");
 
+// Whitelist of IDs
+define("WHITELIST", ["88989815", "364338017", "158389506"]);
+
 // FLYNN Tokens
+define("FLN_GROUP_ID", '188445631');
 define("FLN_CONFIRMATION_TOKEN", '8c6e3d3a');
 define("FLN_ACCESS_TOKEN", '52ee9efe62283e2b61e96d008bc3d4000ed4721d545eb02c7eacd31f4e23daa817114eae859094f03fec4');
 define("FLN_SECRET_KEY", 'FLNSPACE43');

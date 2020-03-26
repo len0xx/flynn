@@ -1,7 +1,7 @@
 <?php
 
 //
-// F L Y N N — v0.58
+// F L Y N N — v0.59
 //
 // "Cases" file 
 // this file searches for certain phrases in users' message and decides what reply to send him
@@ -84,15 +84,19 @@ if (!FLN_MESSAGE_EMPTY || FLN_MESSAGE_ATTACHMENT_TYPE == 'fwd_messages') {
     elseif (count($message) < 10 && (has("and", ["сколько", "в", "световом", "дне"]) && count($message) > 5 && count($message) < 8)) send(FLN_APPNAME, calc("light_days1"), "");
     elseif (count($message) < 10 && (has("and", ["сколько", "в", "астрономической", "единице"]) && count($message) > 5 && count($message) < 9)) send(FLN_APPNAME, calc("au1"), "");
     elseif (count($message) < 10 && (has("and", ["сколько", "в", "парсеке"]) && count($message) > 4 && count($message) < 7)) send(FLN_APPNAME, calc("parsec1"), "");
-    else send(FLN_APPNAME, getr($defaults), "");
+    else {
+        if (count($message) == 1 && (has("or", ['ладно', 'понятно', 'хорошо', 'понял']))) send(FLN_APPNAME, "noreply", "");
+        else send(FLN_APPNAME, getr($defaults), "");
+    }
 } else {
     if (FLN_MESSAGE_ATTACHMENT_TYPE == 'sticker') {
         if (FLN_STICKER_ID == '271_8748' || FLN_STICKER_ID == '325_10699') send(FLN_APPNAME, "Алоха, ".FLN_USER_FIRST_NAME."!", "");
-        elseif (FLN_STICKER_ID == '500_17616' || FLN_STICKER_ID == '522_18463' || FLN_STICKER_ID == '151_4710' || FLN_STICKER_ID == '111_3462') send(FLN_APPNAME, "Привет, ".FLN_USER_FIRST_NAME."!", "");
+        elseif (FLN_STICKER_ID == '500_17616' || FLN_STICKER_ID == '522_18463' || FLN_STICKER_ID == '151_4710' || FLN_STICKER_ID == '111_3462' || FLN_STICKER_ID == '94_3003') send(FLN_APPNAME, "Привет, ".FLN_USER_FIRST_NAME."!", "");
         elseif (FLN_STICKER_ID == '111_3467' || FLN_STICKER_ID == '111_3480' || FLN_STICKER_ID == '111_3461') send(FLN_APPNAME, ifile("earth"), "photo-188445631_457239042");
         elseif (FLN_STICKER_ID == '111_3483') send(FLN_APPNAME, ifile("solar_system"), "photo-188445631_457239029");
         elseif (FLN_STICKER_ID == '111_3469' || FLN_STICKER_ID == '111_3482') send(FLN_APPNAME, ifile("moon"), "photo-188445631_457239046");
-        elseif (FLN_STICKER_ID == '111_3479') send(FLN_APPNAME, ifile("blackholes"), "photo-188445631_457239037");
+        elseif (FLN_STICKER_ID == '111_3479' || FLN_STICKER_ID == '94_2923') send(FLN_APPNAME, ifile("blackholes"), "photo-188445631_457239037");
+        elseif (FLN_STICKER_ID == '94_2920') send(FLN_APPNAME, ifile("gagarin"), "");
         else send(FLN_APPNAME, getr($defaults_stickers), "");
     } elseif (FLN_MESSAGE_ATTACHMENT_TYPE == 'photo') {
         send(FLN_APPNAME, "Я ещё не научился распознавать, что находится на фотографиях, поэтому не могу тебе ничего ответить", "");
@@ -114,6 +118,5 @@ if (!FLN_MESSAGE_EMPTY || FLN_MESSAGE_ATTACHMENT_TYPE == 'fwd_messages') {
         send(FLN_APPNAME, "Надо признаться, я не могу знать, что находится в этой геолокации, соответственно и ответить ничего не могу", "");
     } else send(FLN_APPNAME, getr($defaults), "");
 }
-
 
 ?>

@@ -1,7 +1,7 @@
 <?php
 
 //
-// F L Y N N — Requests handler v0.58
+// F L Y N N — Requests handler v0.59
 //
 if (!isset($_REQUEST)) return;
 
@@ -25,6 +25,7 @@ try {
         // If it's a new message..
         case CALLBACK_API_EVENT_NEW_MESSAGE:
             define("FLN_RECIEVED_MESSAGE", $event['object']['message']['text']);
+            define("FLN_MSG_ID", $event['object']['message']['id']);
             
             $dataTypes = ['sticker', 'doc', 'photo', 'video', 'audio', 'graffiti', 'audio_message', 'wall', 'fwd_messages', 'geo'];
             if (count($event['object']['message']['attachments'])) define("FLN_MESSAGE_ATTACHMENT_TYPE", $event['object']['message']['attachments'][0]['type']);
