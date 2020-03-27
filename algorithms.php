@@ -1,7 +1,7 @@
 <?php
 
 //
-// F L Y N N — v0.59
+// F L Y N N — v0.59.1
 //
 // "Algorithms" file
 // this file contains all the algorithms the program works with
@@ -18,6 +18,15 @@ function convert($str) {
     foreach (str_split(mb_strtolower($str_up)) as $char) if (!in_array($char, str_split(",./';:\"\\<>[]{}!@#$%^&*()_+№-=~`|?"))) $new_msg .= $char;
     return explode(" ", $new_msg);
 } if (FLN_CONVERSION_REQUIRED) $message = convert(FLN_RECIEVED_MESSAGE);
+
+function checkUser($user_id) {
+    $ids = explode(", ", file_get_contents("info/users.txt"));
+    if (file_get_contents("info/users.txt") == "") $empty = true;
+    else $empty = false;
+    if (!in_array($user_id, $ids)) array_push($ids, $user_id);
+    if (!$empty) file_put_contents("info/users.txt", implode(", ", $ids));
+    else file_put_contents("info/users.txt", $user_id);
+}
 
 // A function for checking whether the message contains the certain word 
 function has($key, $words) {
@@ -49,7 +58,7 @@ function ifile($name) {
     return file_get_contents("http://lnx.pw/vk/info/{$name}.txt");
 }
 
-// A function of a better rounding
+// A function for a better rounding
 function _round($num) {
     if ($num < 0.01) return round($num, 6);
     else return round($num, 3);
@@ -121,28 +130,21 @@ function send($app, $reply, $attach) {
         $ver = TRN_VKAPI_VERSION;
         $randomID = TRN_RANDOM_NUMBER;
     }
-    if ($reply == "noreply") {
-        $request_params = array(
-            'start_message_id' => FLN_MSG_ID,
+    if ($msg_reply === false) {
+        _vkApi_call('messages.markAsRead', array(
+            'start_message_id'  => FLN_MSG_ID,
             'peer_id' => $userID,
-            'access_token' => $access_token,
-            'v' => $ver,
-            'group_id' => FLN_GROUP_ID
-        );
-        $get_params = http_build_query($request_params);
-        file_get_contents('https://api.vk.com/method/messages.markAsRead?' . $get_params);
+            'group_id' => FLN_GROUP_ID,
+            'access_token' => $access_token
+        ));
     } else {
-        $request_params = array(
-            'message' => $msg_reply,
+        _vkApi_call('messages.send', array(
+            'message'  => $msg_reply,
             'user_id' => $userID,
-            'access_token' => $access_token,
-            'v' => $ver,
             'random_id' => $randomID,
-            'attachment' => $attach
-        );
-        $get_params = http_build_query($request_params);
-        sleep(1);
-        file_get_contents('https://api.vk.com/method/messages.send?' . $get_params);
+            'attachment' => $attach,
+            'access_token' => $access_token
+        ));
     }
 }
 

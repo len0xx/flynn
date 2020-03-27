@@ -1,7 +1,7 @@
 <?php
 
 //
-// F L Y N N — v0.59
+// F L Y N N — v0.59.1
 //
 // "Data" file 
 // this file contains all the data used for connecting with server and sending messages
@@ -14,6 +14,8 @@ define("CALLBACK_API_EVENT_REPLY", "message_reply");
 define("CALLBACK_API_EVENT_USER_JOINED", "group_join");
 define("CALLBACK_API_EVENT_USER_LEFT", "group_leave");
 define("CALLBACK_API_EVENT_NEW_WALL_POST", "wall_post_new");
+
+define("VK_API_ENDPOINT", "https://api.vk.com/method/");
 
 // Whitelist of IDs
 define("WHITELIST", ["88989815", "364338017", "158389506"]);

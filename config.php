@@ -1,7 +1,7 @@
 <?php
 
 //
-// F L Y N N — v0.59
+// F L Y N N — v0.59.1
 //
 // "Config" file 
 // this file contains all the functions used for handling the notification
@@ -39,4 +39,30 @@ function log_error($message) {
     _log_write('[ERROR] ' . $message);
 }
 
+function _vkApi_call($method, $params = array()) {
+    $params['v'] = FLN_VKAPI_VERSION;
+  
+    $query = http_build_query($params);
+    $url = VK_API_ENDPOINT.$method.'?'.$query;
+  
+    $curl = curl_init($url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    $json = curl_exec($curl);
+    $error = curl_error($curl);
+    if ($error) {
+            log_error($error);
+      throw new Exception("Failed {$method} request");
+    }
+  
+    curl_close($curl);
+  
+    $response = json_decode($json, true);
+    if (!$response || !isset($response['response'])) {
+            log_error($json);
+      throw new Exception("Invalid response for {$method} request");
+    }
+  
+    return $response['response'];
+}
+  
 ?>

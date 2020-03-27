@@ -1,7 +1,7 @@
 <?php
 
 //
-// F L Y N N — Requests handler v0.59
+// F L Y N N — Requests handler v0.59.1
 //
 if (!isset($_REQUEST)) return;
 
@@ -27,15 +27,17 @@ try {
             define("FLN_RECIEVED_MESSAGE", $event['object']['message']['text']);
             define("FLN_MSG_ID", $event['object']['message']['id']);
             
+            define("FLN_ATTACHMENTS", $event['object']['message']['attachments']);
+            define("FLN_ATTACHMENTS_AMOUNT", count(FLN_ATTACHMENTS));
             $dataTypes = ['sticker', 'doc', 'photo', 'video', 'audio', 'graffiti', 'audio_message', 'wall', 'fwd_messages', 'geo'];
-            if (count($event['object']['message']['attachments'])) define("FLN_MESSAGE_ATTACHMENT_TYPE", $event['object']['message']['attachments'][0]['type']);
+            if (FLN_ATTACHMENTS_AMOUNT) define("FLN_MESSAGE_ATTACHMENT_TYPE", FLN_ATTACHMENTS[0]['type']);
             elseif (isset($event['object']['message']['fwd_messages']) && count($event['object']['message']['fwd_messages'])) define("FLN_MESSAGE_ATTACHMENT_TYPE", "fwd_messages");
             elseif (isset($event['object']['message']['geo'])) define("FLN_MESSAGE_ATTACHMENT_TYPE", "geo");
             else define("FLN_MESSAGE_ATTACHMENT_TYPE", "none");
             if (FLN_RECIEVED_MESSAGE == "") define("FLN_MESSAGE_EMPTY", true);
             else define("FLN_MESSAGE_EMPTY", false);
             
-            if (FLN_MESSAGE_ATTACHMENT_TYPE == 'sticker') define("FLN_STICKER_ID", $event['object']['message']['attachments'][0]['sticker']['product_id'] . "_" . $event['object']['message']['attachments'][0]['sticker']['sticker_id']);
+            if (FLN_MESSAGE_ATTACHMENT_TYPE == 'sticker') define("FLN_STICKER_ID", FLN_ATTACHMENTS[0]['sticker']['product_id'] . "_" . FLN_ATTACHMENTS[0]['sticker']['sticker_id']);
             else define("FLN_STICKER_ID", "none");
             
             //..getting the ID of a sender
@@ -50,6 +52,7 @@ try {
             // Including algorithms & cases files
             require_once "algorithms.php";
             require_once "cases.php";
+            checkUser(FLN_USER_ID);
             //Возвращаем "ok" серверу Callback API
             _callback_response('ok');
     

@@ -1,7 +1,7 @@
 <?php
 
 //
-// F L Y N N — v0.59
+// F L Y N N — v0.59.1
 //
 // "Cases" file 
 // this file searches for certain phrases in users' message and decides what reply to send him
@@ -85,7 +85,7 @@ if (!FLN_MESSAGE_EMPTY || FLN_MESSAGE_ATTACHMENT_TYPE == 'fwd_messages') {
     elseif (count($message) < 10 && (has("and", ["сколько", "в", "астрономической", "единице"]) && count($message) > 5 && count($message) < 9)) send(FLN_APPNAME, calc("au1"), "");
     elseif (count($message) < 10 && (has("and", ["сколько", "в", "парсеке"]) && count($message) > 4 && count($message) < 7)) send(FLN_APPNAME, calc("parsec1"), "");
     else {
-        if (count($message) == 1 && (has("or", ['ладно', 'понятно', 'хорошо', 'понял']))) send(FLN_APPNAME, "noreply", "");
+        if (count($message) == 1 && (has("or", ['ладно', 'понятно', 'хорошо', 'понял']))) send(FLN_APPNAME, false, "");
         else send(FLN_APPNAME, getr($defaults), "");
     }
 } else {
