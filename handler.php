@@ -1,13 +1,17 @@
 <?php
 
 //
-// F L Y N N — Requests handler v0.59.1
+// F L Y N N — Requests handler v0.6
 //
 if (!isset($_REQUEST)) return;
+
 
 // Including data & config files
 require_once "data.php";
 require_once "config.php";
+
+$appSettings = _getSettings("flynn");
+if (!$appSettings['activity']) _callback_response("Application activity status is false");
 
 // Receiving and decoding the notification
 $event = _callback_getEvent();

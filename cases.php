@@ -1,7 +1,7 @@
 <?php
 
 //
-// F L Y N N — v0.59.1
+// F L Y N N — v0.6
 //
 // "Cases" file 
 // this file searches for certain phrases in users' message and decides what reply to send him
@@ -58,7 +58,7 @@ if (!FLN_MESSAGE_EMPTY || FLN_MESSAGE_ATTACHMENT_TYPE == 'fwd_messages') {
     elseif (count($message) < 6 && (has("and", ["кто", "гагарин"]) || has("and", ["расскажи", "про", "гагарина"]))) send(FLN_APPNAME, ifile("gagarin"), "");
     elseif (count($message) < 6 && (has("and", ["кто", "терешкова"]) || has("and", ["расскажи", "про", "терешкову"]))) send(FLN_APPNAME, ifile("tereshkova"), "");
     elseif (count($message) < 6 && (has("and", ["кто", "леонов"]) || has("and", ["расскажи", "про", "леонова"]))) send(FLN_APPNAME, ifile("leonov"), "");
-    elseif (count($message) < 7 && (has("and", ["кто", "армстронг"]) || has("and", ["расскажи", "про", "армстронга"]))) send(FLN_APPNAME, ifile("armstrong"), "");
+    elseif (count($message) < 7 && (has("and", ["кто", "армстронг"]) || has("and", ["расскажи", "про", "армстронга"]) || has("and", ["первый", "человек", "на", "луне"]))) send(FLN_APPNAME, ifile("armstrong"), "");
     elseif (count($message) < 7 && (has("and", ["кто", "олдрин"]) || has("and", ["расскажи", "про", "олдрина"]))) send(FLN_APPNAME, ifile("aldrin"), "");
     elseif (count($message) < 7 && (has("and", ["что", "аполлон"]) || has("and", ["расскажи", "про", "высадку", "на", "луну"]))) send(FLN_APPNAME, ifile("apollo"), "");
     elseif (count($message) < 5 && (has("and", ["что", "протозвезда"]) || has("and", ["расскажи", "про", "протозвезды"]))) send(FLN_APPNAME, ifile("protostar"), "");
@@ -68,11 +68,15 @@ if (!FLN_MESSAGE_EMPTY || FLN_MESSAGE_ATTACHMENT_TYPE == 'fwd_messages') {
     elseif (count($message) < 6 && (has("and", ["что", "красный", "гигант"]) || has("and", ["расскажи", "про", "красный", "гигант"]))) send(FLN_APPNAME, ifile("red_giant"), "");
     elseif (count($message) < 6 && (has("and", ["что", "белый", "карлик"]) || has("and", ["расскажи", "про", "белый", "карлик"]))) send(FLN_APPNAME, ifile("white_dwarf"), "");
     elseif (count($message) < 6 && (has("and", ["что", "двойная", "звезда"]) || has("and", ["расскажи", "про", "двойную", "звезду"]))) send(FLN_APPNAME, ifile("binary_star"), "");
-    elseif (count($message) < 6 && (has("and", ["какие", "книги", "про", "космос"]) || has("and", ["какие", "книги", "про", "астрономию"]))) send(FLN_APPNAME, ifile("books"), "");
+    elseif (count($message) < 6 && (has("and", ["книги", "про", "космос"]) || has("and", ["книги", "про", "астрономию"]) || has("and", ["книги", "по", "астрономии"]))) send(FLN_APPNAME, ifile("books"), "");
     elseif (count($message) < 6 && (has("and", ["когда", "день", "космонавтики"]) || has("and", ["расскажи", "про", "день", "космонавтики"]))) send(FLN_APPNAME, ifile("cosmo_day"), "");
     elseif (count($message) < 6 && (has("and", ["что", "скорость", "света"]) || has("and", ["чему", "равна", "скорость", "света"]))) send(FLN_APPNAME, ifile("light_speed"), "");
     elseif (count($message) < 5 && (has("and", ["что", "световой", "год"]))) send(FLN_APPNAME, ifile("light_year"), "");
     elseif (count($message) < 5 && (has("and", ["что", "световой", "день"]))) send(FLN_APPNAME, ifile("light_day"), "");
+    elseif (count($message) < 4 && (has("and", ["что", "комета"]))) send(FLN_APPNAME, ifile("comet"), "");
+    elseif (count($message) < 4 && (has("and", ["что", "астероид"]))) send(FLN_APPNAME, ifile("asteroid"), "");
+    elseif (count($message) < 5 && (has("and", ["почему", "земля", "круглая"]))) send(FLN_APPNAME, ifile("round_earth"), "");
+    elseif (count($message) < 6 && (has("and", ["фильмы", "про", "космос"]))) send(FLN_APPNAME, ifile("films"), "");
     elseif (count($message) < 5 && (has("and", ["что", "ты", "можешь"]) || has("and", ["что", "ты", "умеешь"]) || has("and", ["список", "вопросов"]))) send(FLN_APPNAME, ifile("list"), "");
     elseif (count($message) < 4 && (has("and", ["спасибо"]))) send(FLN_APPNAME, "Не за что, обращайся ещё!", "");
     elseif (count($message) > 1 && (has("or", $forbidden))) send(FLN_APPNAME, getr($forbs), ""); // Forbidden words

@@ -1,7 +1,7 @@
 <?php
 
 //
-// F L Y N N — v0.59.1
+// F L Y N N — v0.6
 //
 // "Algorithms" file
 // this file contains all the algorithms the program works with

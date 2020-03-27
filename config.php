@@ -1,7 +1,7 @@
 <?php
 
 //
-// F L Y N N — v0.59.1
+// F L Y N N — v0.6
 //
 // "Config" file 
 // this file contains all the functions used for handling the notification
@@ -23,7 +23,7 @@ function _log_write($message) {
     $trace = debug_backtrace();
     $function_name = isset($trace[2]) ? $trace[2]['function'] : '-';
     $mark = date("H:i:s") . ' [' . $function_name . ']';
-    $log_name = '/log_' . date("j.n.Y") . '.txt';
+    $log_name = 'log/log_' . date("j-n-Y") . '.txt';
     file_put_contents($log_name, $mark . " : " . $message . "\n", FILE_APPEND);
 }
 
@@ -64,5 +64,19 @@ function _vkApi_call($method, $params = array()) {
   
     return $response['response'];
 }
-  
+
+function _getSettings($app) {
+    if ($app == "tron") $addition = "../"; 
+    else $addition = "";
+    return json_decode(file_get_contents($addition."settings.json"), true);
+}
+
+function _setSettings($app, $name, $value) {
+    if ($app == "tron") $addition = "../"; 
+    else $addition = "";
+    $settings = json_decode(file_get_contents($addition."settings.json"), true);
+    $settings[$name] = $value;
+    file_put_contents($addition."settings.json", json_encode($settings));
+}
+
 ?>
