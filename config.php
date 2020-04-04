@@ -1,7 +1,7 @@
 <?php
 
 //
-// F L Y N N — v0.6
+// F L Y N N — v0.62
 //
 // "Config" file 
 // this file contains all the functions used for handling the notification
@@ -43,9 +43,12 @@ function _vkApi_call($method, $params = array()) {
     $params['v'] = FLN_VKAPI_VERSION;
   
     $query = http_build_query($params);
-    $url = VK_API_ENDPOINT.$method.'?'.$query;
+    $url = VK_API_ENDPOINT.$method;
   
     $curl = curl_init($url);
+    // Send a request using POST method
+    curl_setopt($curl, CURLOPT_POST, 1);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $query);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     $json = curl_exec($curl);
     $error = curl_error($curl);

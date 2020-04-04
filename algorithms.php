@@ -1,7 +1,7 @@
 <?php
 
 //
-// F L Y N N — v0.6
+// F L Y N N — v0.62
 //
 // "Algorithms" file
 // this file contains all the algorithms the program works with
@@ -9,7 +9,7 @@
 
 // A function that converts a string message into an array of lowercase words ..
 // .. and gets rid of all the extra symbols
-                                                                                                                                                                                        $forbidden = ['блять', 'сука', 'хуй', 'пизда', 'ебать', 'пиздец', 'охуеть', 'бля', 'блядь', 'ебаный', 'суки'];
+                                                                                                                                                                                        $forbidden = ['блять', 'бля', 'блядь', 'сука', 'суки', 'хуй', 'охуеть', 'охуел', 'охуела', 'охуело', 'хуевый', 'нихуя', 'пизда', 'пиздец', 'ебать', 'ебаный', 'пидр', 'пидор', 'пидарас', 'уебок', 'уебан', 'еблан', 'говно', 'мудак', 'шлюха', 'гандон', 'хули', 'чмо'];
 function convert($str) {
     global $event;
     if (FLN_MESSAGE_ATTACHMENT_TYPE == 'fwd_messages' && FLN_MESSAGE_EMPTY) $str_up = $event['object']['message']['fwd_messages'][0]['text'];
@@ -20,12 +20,16 @@ function convert($str) {
 } if (FLN_CONVERSION_REQUIRED) $message = convert(FLN_RECIEVED_MESSAGE);
 
 function checkUser($user_id) {
-    $ids = explode(", ", file_get_contents("info/users.txt"));
-    if (file_get_contents("info/users.txt") == "") $empty = true;
-    else $empty = false;
-    if (!in_array($user_id, $ids)) array_push($ids, $user_id);
-    if (!$empty) file_put_contents("info/users.txt", implode(", ", $ids));
-    else file_put_contents("info/users.txt", $user_id);
+    $settings = _getSettings('flynn');
+    if (!in_array($user_id, $settings['users'])) {
+        array_push($settings['users'], $user_id);
+        _setSettings('flynn', 'users', $settings['users']);
+    }
+}
+
+function startsWith($string, $startString) { 
+    $len = strlen($startString);
+    return (substr($string, 0, $len) === $startString);
 }
 
 // A function for checking whether the message contains the certain word 
@@ -52,9 +56,27 @@ function has($key, $words) {
 // A function that returns a random element of an array
 function getr($arr) { return $arr[rand(0, sizeof($arr))]; }
 
+// A function that returns a certain amount of randomly chosen elements from given array
+function getr_few($arr, $amount) {
+    $numbers = [];
+    $result = [];
+    for ($i = 0; $i < $amount; $i++) {
+        $y = rand(0, sizeof($arr));
+        if (!in_array($y, $numbers)) array_push($numbers, $y);
+        else {
+            $y = rand(0, sizeof($arr));
+            if (!in_array($y, $numbers)) array_push($numbers, $y);
+            else {
+                $y = rand(0, sizeof($arr));
+                if (!in_array($y, $numbers)) array_push($numbers, $y);
+            }
+        } array_push($result, $arr[$numbers[$i]]);
+    } return $result;
+}
+
 // A function that returns contains of a file
 function ifile($name) {
-    if (!file_exists("info/$name.txt") || file_get_contents("http://lnx.pw/vk/info/{$name}.txt") == "") return "Данные ещё не были записаны в этот файл. Попробуйте позже";
+    if (!file_exists("info/$name.txt") || file_get_contents("http://lnx.pw/vk/info/{$name}.txt") == "") return "Ошибка: Данные ещё не были записаны в этот файл. Попробуйте позже";
     return file_get_contents("http://lnx.pw/vk/info/{$name}.txt");
 }
 
@@ -116,20 +138,35 @@ function calc($metric_out) {
     }
 }
 
+function isPrevMsg($cont) {
+    $previousMsg = _vkApi_call('messages.getById', array(
+        'message_ids'  => (int) FLN_MSG_ID - 1,
+        'group_id' => FLN_GROUP_ID,
+        'preview_length' => 0,
+        'extended' => 0,
+        'fields' => '',
+        'access_token' => FLN_ACCESS_TOKEN
+    ));
+    return $previousMsg['items'][0]['text'] == $cont;
+}
+
+function tryAsking($key) {
+    return "\n\nПопробуй также спросить: " . getr(FLN_QUESTIONS);
+}
+
 // A function for sending the reply
 function send($app, $reply, $attach) {
+    global $defaults;
     $userID = FLN_USER_ID;
-    if (!in_array($userID, WHITELIST)) $msg_reply = "Ваш ID не допущен к приложению. Попробуйте позже или свяжитесь с администратором";
-    else $msg_reply = $reply;
-    if ($app == FLN_APPNAME) {
-        $access_token = FLN_ACCESS_TOKEN;
-        $ver = FLN_VKAPI_VERSION;
-        $randomID = FLN_RANDOM_NUMBER;
+    if (!in_array($userID, WHITELIST) || in_array($userID, BLACKLIST)) {
+        $msg_reply = "Ваш ID не допущен к приложению. Попробуйте позже или свяжитесь с администратором";
+        $attachment = "";
     } else {
-        $access_token = TRN_ACCESS_TOKEN;
-        $ver = TRN_VKAPI_VERSION;
-        $randomID = TRN_RANDOM_NUMBER;
-    }
+        if ($reply == ifile("sun")) $msg_reply = $reply . tryAsking("any");
+        else $msg_reply = $reply;
+        $attachment = $attach;
+    } if ($app == FLN_APPNAME) $access_token = FLN_ACCESS_TOKEN;
+    else $access_token = TRN_ACCESS_TOKEN;
     if ($msg_reply === false) {
         _vkApi_call('messages.markAsRead', array(
             'start_message_id'  => FLN_MSG_ID,
@@ -141,10 +178,22 @@ function send($app, $reply, $attach) {
         _vkApi_call('messages.send', array(
             'message'  => $msg_reply,
             'user_id' => $userID,
-            'random_id' => $randomID,
-            'attachment' => $attach,
+            'random_id' => rand(100000, 999999),
+            'attachment' => $attachment,
             'access_token' => $access_token
         ));
+        if ($app == FLN_APPNAME) {
+            if (in_array($msg_reply, $defaults) && !rand(0, 2)) {
+                _vkApi_call('messages.send', array(
+                    'message'  => "Попробуй написать \"Список вопросов\", чтобы узнать, на какие сообщения я могу ответить",
+                    'user_id' => $userID,
+                    'random_id' => rand(100000, 999999),
+                    'attachment' => $attachment,
+                    'access_token' => $access_token
+                ));
+            }
+        }
+        
     }
 }
 

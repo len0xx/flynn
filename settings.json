@@ -1,4 +1,1 @@
-{
-    "app":"flynn",
-    "activity":false
-}
+{"app":"flynn","activity":true,"users":[88989815,364338017,252778702],"whitelist":[88989815,364338017,158389506,252778702],"blacklist":[],"subscription":[88989815]}
